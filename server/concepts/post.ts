@@ -1,23 +1,20 @@
 import { Filter, ObjectId } from "mongodb";
 
 import DocCollection, { BaseDoc } from "../framework/doc";
-import { NotAllowedError, NotFoundError } from "./errors";
-
-export interface PostOptions {
-  backgroundColor?: string;
-}
+import { BadValuesError, NotAllowedError, NotFoundError } from "./errors";
 
 export interface PostDoc extends BaseDoc {
   author: ObjectId;
-  content: string;
-  options?: PostOptions;
+  images: string;
+  text: string;
 }
 
 export default class PostConcept {
   public readonly posts = new DocCollection<PostDoc>("posts");
 
-  async create(author: ObjectId, content: string, options?: PostOptions) {
-    const _id = await this.posts.createOne({ author, content, options });
+  async create(author: ObjectId, images: string, text: string) {
+    this.canCreate(images, text);
+    const _id = await this.posts.createOne({ author, images, text });
     return { msg: "Post successfully created!", post: await this.posts.readOne({ _id }) };
   }
 
@@ -33,12 +30,23 @@ export default class PostConcept {
   }
 
   async update(_id: ObjectId, update: Partial<PostDoc>) {
+    const post = await this.posts.readOne({ _id });
+    if (!post) {
+      throw new NotFoundError(`Post ${_id} does not exist!`);
+    }
     this.sanitizeUpdate(update);
+    if (update.images !== undefined || update.text !== undefined) {
+      this.canCreate(update.images, update.text);
+    }
     await this.posts.updateOne({ _id }, update);
     return { msg: "Post successfully updated!" };
   }
 
   async delete(_id: ObjectId) {
+    const post = await this.posts.readOne({ _id });
+    if (!post) {
+      throw new NotFoundError(`Post ${_id} does not exist!`);
+    }
     await this.posts.deleteOne({ _id });
     return { msg: "Post deleted successfully!" };
   }
@@ -53,9 +61,14 @@ export default class PostConcept {
     }
   }
 
+  private canCreate(images: string | undefined, text: string | undefined) {
+    if (!images && !text) {
+      throw new BadValuesError("Post must have some form of content.");
+    }
+  }
+
   private sanitizeUpdate(update: Partial<PostDoc>) {
-    // Make sure the update cannot change the author.
-    const allowedUpdates = ["content", "options"];
+    const allowedUpdates = ["images", "text"];
     for (const key in update) {
       if (!allowedUpdates.includes(key)) {
         throw new NotAllowedError(`Cannot update '${key}' field!`);

@@ -5,6 +5,7 @@ import { BadValuesError, NotAllowedError, NotFoundError } from "./errors";
 export interface UserDoc extends BaseDoc {
   username: string;
   password: string;
+  lastAuth: Date;
 }
 
 export default class UserConcept {
@@ -58,6 +59,8 @@ export default class UserConcept {
     if (!user) {
       throw new NotAllowedError("Username or password is incorrect.");
     }
+    const currentDate = new Date();
+    await this.update(user._id, { lastAuth: currentDate });
     return { msg: "Successfully authenticated.", _id: user._id };
   }
 
@@ -79,6 +82,14 @@ export default class UserConcept {
     if (maybeUser === null) {
       throw new NotFoundError(`User not found!`);
     }
+  }
+
+  async getLastAuth(_id: ObjectId) {
+    const user = await this.users.readOne({ _id });
+    if (user === null) {
+      throw new NotFoundError(`User not found!`);
+    }
+    return user.lastAuth;
   }
 
   private async canCreate(username: string, password: string) {

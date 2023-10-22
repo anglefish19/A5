@@ -1,6 +1,8 @@
 import { User } from "./app";
+import { CommentDoc } from "./concepts/comment";
 import { AlreadyFriendsError, FriendNotFoundError, FriendRequestAlreadyExistsError, FriendRequestDoc, FriendRequestNotFoundError } from "./concepts/friend";
 import { PostAuthorNotMatchError, PostDoc } from "./concepts/post";
+import { TierDoc } from "./concepts/tier";
 import { Router } from "./framework/router";
 
 /**
@@ -25,6 +27,36 @@ export default class Responses {
   static async posts(posts: PostDoc[]) {
     const authors = await User.idsToUsernames(posts.map((post) => post.author));
     return posts.map((post, i) => ({ ...post, author: authors[i] }));
+  }
+
+  /**
+   * Convert CommentDoc into more readable format for the frontend by converting the author id into a username.
+   */
+  static async comment(comment: CommentDoc | null) {
+    if (!comment) {
+      return comment;
+    }
+    const author = await User.getUserById(comment.author);
+    return { ...comment, author: author.username };
+  }
+
+  /**
+   * Convert TierDoc into more readable format for the frontend by converting the owner id into a username.
+   */
+  static async tier(tier: TierDoc | null) {
+    if (!tier) {
+      return tier;
+    }
+    const owner = await User.getUserById(tier.owner);
+    return { ...tier, owner: owner.username };
+  }
+
+  /**
+   * Same as {@link comment} but for an array of CommentDoc for improved performance.
+   */
+  static async comments(comments: CommentDoc[]) {
+    const authors = await User.idsToUsernames(comments.map((comment) => comment.author));
+    return comments.map((comment, i) => ({ ...comment, author: authors[i] }));
   }
 
   /**
