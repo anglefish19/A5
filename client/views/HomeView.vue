@@ -13,6 +13,9 @@ const { currentUsername, isLoggedIn } = storeToRefs(useUserStore());
       <h1 v-if="isLoggedIn">Welcome {{ currentUsername }}!</h1>
       <h1 v-else>Please login!</h1>
     </section>
+    <div class="row">
+      <RouterLink v-if="isLoggedIn" to="/tiers" class="button"> View Tiers </RouterLink>
+    </div>
     <PostListComponent />
   </main>
 </template>
@@ -20,5 +23,11 @@ const { currentUsername, isLoggedIn } = storeToRefs(useUserStore());
 <style scoped>
 h1 {
   text-align: center;
+}
+.row {
+  display: flex;
+  justify-content: space-between;
+  margin: 0 auto;
+  max-width: 60em;
 }
 </style>
