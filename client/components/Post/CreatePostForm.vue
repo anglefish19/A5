@@ -2,13 +2,14 @@
 import { ref } from "vue";
 import { fetchy } from "../../utils/fetchy";
 
-const content = ref("");
+const text = ref("");
+const image = ref("");
 const emit = defineEmits(["refreshPosts"]);
 
-const createPost = async (content: string) => {
+const createPost = async (text: string, image: string) => {
   try {
     await fetchy("/api/posts", "POST", {
-      body: { content },
+      body: { text, image },
     });
   } catch (_) {
     return;
@@ -18,14 +19,16 @@ const createPost = async (content: string) => {
 };
 
 const emptyForm = () => {
-  content.value = "";
+  text.value = "";
 };
 </script>
 
 <template>
-  <form @submit.prevent="createPost(content)">
-    <label for="content">Post Contents:</label>
-    <textarea id="content" v-model="content" placeholder="Create a post!" required> </textarea>
+  <form @submit.prevent="createPost(text, image)">
+    <label for="text">Post Text:</label>
+    <textarea id="text" v-model="text" placeholder="Insert text here"> </textarea>
+    <label for="image">Image:</label>
+    <textarea id="image" v-model="image" placeholder="Insert link to image here (make sure it's publicly accessible!)"> </textarea>
     <button type="submit" class="pure-button-primary pure-button">Create Post</button>
   </form>
 </template>
