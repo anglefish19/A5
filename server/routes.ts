@@ -30,6 +30,11 @@ class Routes {
     return await User.getUserByUsername(username);
   }
 
+  @Router.get("/users/:userID")
+  async getUsername(userID: ObjectId) {
+    return await User.getUserById(userID);
+  }
+
   @Router.post("/users")
   async createUser(session: WebSessionDoc, username: string, password: string) {
     WebSession.isLoggedOut(session);
@@ -165,7 +170,7 @@ class Routes {
   }
 
   @Router.patch("/tiers/:_id/:item")
-  async updateItem(session: WebSessionDoc, _id: ObjectId, item: ObjectId, fxn: string) {
+  async updateItem(session: WebSessionDoc, _id: ObjectId, item: string, fxn: string) {
     if (_id === undefined || item === undefined || fxn === undefined) {
       throw new BadValuesError("Please fill out all fields.");
     }
@@ -199,7 +204,7 @@ class Routes {
 
       for (const tier of tiers) {
         for (const friend of friends) {
-          if (await Tier.isItemInTier(tier._id, friend)) {
+          if (await Tier.isItemInTier(tier._id, (await User.getUserById(friend)).username)) {
             const friendPosts = await Post.getPosts({ author: friend, dateCreated: { $gt: time } });
             for (const post of friendPosts) {
               posts.push(post._id);

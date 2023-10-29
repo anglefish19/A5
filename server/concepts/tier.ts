@@ -4,7 +4,7 @@ import { BadValuesError, NotAllowedError, NotFoundError } from "./errors";
 
 export interface TierDoc extends BaseDoc {
   owner: ObjectId;
-  items: ObjectId[];
+  items: string[];
   name: string;
   priority: number;
 }
@@ -14,7 +14,7 @@ export default class TierConcept {
 
   async create(owner: ObjectId, name: string, priority: number) {
     this.canCreate(name, priority);
-    const items: ObjectId[] = [];
+    const items: string[] = [];
     const _id = await this.tiers.createOne({ owner, items, name, priority });
     return { msg: "Tier successfully created!", tier: await this.tiers.readOne({ _id }) };
   }
@@ -54,7 +54,7 @@ export default class TierConcept {
     }
   }
 
-  async isItemInTier(_id: ObjectId, item: ObjectId) {
+  async isItemInTier(_id: ObjectId, item: string) {
     const tier = await this.tiers.readOne({ _id });
     if (!tier) {
       throw new NotFoundError(`Tier ${_id} does not exist!`);
@@ -74,7 +74,7 @@ export default class TierConcept {
     }
   }
 
-  async updateItem(_id: ObjectId, item: ObjectId, fxn: string) {
+  async updateItem(_id: ObjectId, item: string, fxn: string) {
     const tier = await this.tiers.readOne({ _id });
     const contents = tier?.items;
     if (!item) {
@@ -88,8 +88,9 @@ export default class TierConcept {
       await this.tiers.updateOne({ _id }, update);
       return { msg: "Item added!" };
     } else if (fxn === "delete") {
+      console.log("in delete");
       const index = contents?.indexOf(item);
-      if (index && index > -1) {
+      if ((index && index > -1) || index === 0) {
         contents?.splice(index, 1);
       }
       const update: Partial<TierDoc> = { items: contents };
@@ -115,6 +116,9 @@ export default class TierConcept {
     }
     if (isNaN(priority)) {
       throw new BadValuesError("Tier priority must be a number.");
+    }
+    if (!(Number.isInteger(Number(priority)) && Number(priority) > 0)) {
+      throw new BadValuesError("Tier priority must be a positive integer.");
     }
   }
 

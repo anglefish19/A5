@@ -1,24 +1,12 @@
 <script setup lang="ts">
-import { useUserStore } from "@/stores/user";
-import { storeToRefs } from "pinia";
 import { fetchy } from "../../utils/fetchy";
 
 const props = defineProps(["tier"]);
-const emit = defineEmits(["editTier", "refreshTiers"]);
-const { currentUsername } = storeToRefs(useUserStore());
+const emit = defineEmits(["editTier", "refreshTiers", "addItem"]);
 
 const deleteTier = async () => {
   try {
     await fetchy(`/api/tiers/${props.tier._id}`, "DELETE");
-  } catch {
-    return;
-  }
-  emit("refreshTiers");
-};
-
-const addItem = async (item: string) => {
-  try {
-    await fetchy(`/api/tiers/${props.tier._id}/${item}`, "PATCH", { body: { id: props.tier._id, item: item, fxn: "add" } });
   } catch {
     return;
   }
@@ -37,14 +25,15 @@ const deleteItem = async (item: string) => {
 
 <template>
   <p class="name">{{ props.tier.name }} - priority {{ props.tier.priority }}</p>
-  <section class="items" v-if="loaded">
+  <section class="items">
     <article v-for="item in props.tier.items" :key="item._id">
-      <li><button class="button-error btn-small pure-button" @click="deleteItem(item)">Delete Item</button></li>
+      {{ item }}
+      <button class="button-error btn-small pure-button" @click="deleteItem(item)">Delete Item</button>
     </article>
   </section>
   <div class="base">
     <menu>
-      <li><button class="btn-small pure-button" @click="addItem">Add Item</button></li>
+      <li><button class="btn-small pure-button" @click="emit('addItem', props.tier._id)">Add User</button></li>
       <li><button class="btn-small pure-button" @click="emit('editTier', props.tier._id)">Edit Tier Name/Priority</button></li>
       <li><button class="button-error btn-small pure-button" @click="deleteTier">Delete</button></li>
     </menu>

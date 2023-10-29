@@ -29,7 +29,12 @@ const emptyForm = () => {
     <label for="name">Name:</label>
     <textarea id="name" v-model="name" placeholder="Enter a name for your tier!" required> </textarea>
     <label for="priority">Priority:</label>
-    <textarea id="priority" v-model="priority" placeholder="Enter a number that represents the importance of your tier! Priority goes from least to greatest (1 has higher priority than 2)." required>
+    <textarea
+      id="priority"
+      v-model="priority"
+      placeholder="Enter a positive integer that represents the importance of your tier! Priority goes from least to greatest (1 has higher priority than 2)."
+      required
+    >
     </textarea>
     <button type="submit" class="pure-button-primary pure-button">Create Tier</button>
   </form>
