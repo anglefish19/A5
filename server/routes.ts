@@ -191,13 +191,22 @@ class Routes {
   @Router.post("/feed")
   async createFeed(session: WebSessionDoc) {
     const user = WebSession.getUser(session);
+    const lastAuth = await User.getLastAuth(user);
+    const feeds = await Feed.getByUser(user);
 
-    const time = new Date();
-    time.setDate(time.getDate() - 1);
-    const tiers = await Tier.getByOwner(user);
-    if (tiers.length === 0) {
-      return;
+    let time = new Date();
+
+    if (feeds.length === 0 || feeds[0].displayFrom.getTime() < lastAuth.getTime()) {
+      if (feeds.length === 0) {
+        time.setTime(time.getDate() - 3);
+      } else {
+        time = feeds[0].displayFrom;
+        // const created = await Feed.create(null, new Date(), []);
+        // return { msg: time, feed: created.feed };
+      }
     }
+
+    const tiers = await Tier.getByOwner(user);
     const posts = [];
     const friends: string[] = [];
 
@@ -214,7 +223,9 @@ class Routes {
       }
     }
     if (posts.length === 0) {
-      return;
+      const created = await Feed.create(null, new Date(), posts);
+      // return { msg: "Feed: " + feeds[0].displayFrom.getTime() + "\n Auth: " + lastAuth.getTime(), feed: created.feed };
+      return { msg: "No new posts in feed.", feed: created.feed };
     }
     const postsWithUsernames = await Responses.posts(posts);
     return await Feed.create(user, new Date(), postsWithUsernames);

@@ -7,7 +7,6 @@ import { fetchy } from "../../utils/fetchy";
 
 const props = defineProps(["post"]);
 const url = props.post.images;
-const username = ref("");
 const image = ref<HTMLImageElement>();
 const emit = defineEmits(["editPost", "refreshPosts"]);
 const { currentUsername } = storeToRefs(useUserStore());

@@ -12,7 +12,7 @@ const createPost = async (text: string, images: string) => {
   const res = await fetch(images);
   const buff = await res.blob();
 
-  if (!buff.type.startsWith("image/")) {
+  if (images && !buff.type.startsWith("image/")) {
     alert("Input for image is not a url that goes to an image.");
     throw Error("Input for image is not a url that goes to an image.");
   }

@@ -31,16 +31,16 @@ const deleteItem = async (item: string) => {
       -
       <div class="row">
         {{ item }}
-        <button class="button-error btn-small pure-button" @click="deleteItem(item)">Remove</button>
+        <button class="button-error btn-small pure-button" @click="deleteItem(item)">remove</button>
       </div>
     </article>
   </section>
   -
   <div class="base">
     <menu>
-      <li><button class="btn-small pure-button" @click="emit('addItem', props.tier._id)">Add User</button></li>
-      <li><button class="btn-small pure-button" @click="emit('editTier', props.tier._id)">Edit Tier Name/Priority</button></li>
-      <li><button class="button-error btn-small pure-button" @click="deleteTier">Delete</button></li>
+      <li><button class="btn-small pure-button" @click="emit('addItem', props.tier._id)">add user</button></li>
+      <li><button class="btn-small pure-button" @click="emit('editTier', props.tier._id)">edit tier name/priority</button></li>
+      <li><button class="button-error btn-small pure-button" @click="deleteTier">delete</button></li>
     </menu>
   </div>
 </template>
@@ -92,5 +92,9 @@ menu {
 
 .base article:only-child {
   margin-left: auto;
+}
+
+button {
+  border: 1px solid #b5b7b9;
 }
 </style>

@@ -16,11 +16,8 @@ async function login() {
   }
   void updateSession();
   void router.push({ name: "Home" });
-  try {
-    await fetchy(`/api/feed`, "POST");
-  } catch (_) {
-    return;
-  }
+  await fetchy(`/api/feed`, "POST");
+  location.reload();
 }
 </script>
 
@@ -37,7 +34,7 @@ async function login() {
         <input type="password" v-model.trim="password" id="aligned-password" placeholder="password" required />
       </div>
       <div class="center">
-        <button type="submit" class="submit" @click="login">submit</button>
+        <button type="submit" class="submit">submit</button>
       </div>
     </fieldset>
   </form>

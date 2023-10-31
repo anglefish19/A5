@@ -9,7 +9,6 @@ import { fetchy } from "../utils/fetchy";
 
 let posts = ref<Array<Record<string, string>>>([]);
 let editing = ref("");
-const image = ref<HTMLImageElement>();
 const loaded = ref(false);
 const { currentUsername } = storeToRefs(useUserStore());
 

@@ -26,5 +26,5 @@ export const useToastStore = defineStore(
       hideToast,
     };
   },
-  { persist: true },
+  { persist: false },
 );

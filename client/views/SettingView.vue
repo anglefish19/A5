@@ -18,7 +18,7 @@ async function delete_() {
     <h1>settings for {{ currentUsername }}</h1>
     <UpdateUserForm />
     -
-    <button class="button-error pure-button" @click="delete_">Delete User</button>
+    <button class="button-error pure-button" @click="delete_">delete user</button>
   </main>
 </template>
 

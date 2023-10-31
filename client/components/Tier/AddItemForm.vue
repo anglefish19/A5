@@ -25,12 +25,12 @@ const emptyForm = () => {
 
 <template>
   <form @submit.prevent="addItem(username)">
-    <label for="username">Username:</label>
-    <textarea id="username" v-model="username" placeholder="Input a username!" required> </textarea>
+    <label for="username">username:</label>
+    <textarea id="username" v-model="username" placeholder="input a username!" required> </textarea>
     <div class="base">
       <menu>
-        <li><button class="btn-small pure-button-primary pure-button" type="submit">Add User!</button></li>
-        <li><button class="btn-small pure-button" @click="emit('addItem')">Cancel</button></li>
+        <li><button class="btn-small pure-button-primary pure-button orange" type="submit">add user</button></li>
+        <li><button class="btn-small pure-button" @click="emit('addItem')">cancel</button></li>
       </menu>
     </div>
   </form>
@@ -47,7 +47,7 @@ form {
 textarea {
   font-family: inherit;
   font-size: inherit;
-  height: 6em;
+  height: 3em;
   border-radius: 4px;
   resize: none;
 }
@@ -81,5 +81,18 @@ menu {
   justify-content: flex-end;
   font-size: 0.9em;
   font-style: italic;
+}
+
+button {
+  border: 1px solid #b5b7b9;
+  color: black;
+}
+.orange {
+  background-color: rgb(255, 208, 150);
+}
+
+.orange:hover {
+  cursor: pointer;
+  background-color: rgb(255, 237, 150);
 }
 </style>

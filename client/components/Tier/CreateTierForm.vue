@@ -36,7 +36,7 @@ const emptyForm = () => {
       required
     >
     </textarea>
-    <button type="submit" class="pure-button-primary pure-button">Create Tier</button>
+    <button type="submit" class="pure-button-primary pure-button">create tier</button>
   </form>
 </template>
 

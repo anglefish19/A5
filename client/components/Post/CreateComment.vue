@@ -12,7 +12,7 @@ const createComment = async (text: string, image: string) => {
   const res = await fetch(image);
   const buff = await res.blob();
 
-  if (!buff.type.startsWith("image/")) {
+  if (image && !buff.type.startsWith("image/")) {
     alert("Input for image is not a url that goes to an image.");
     throw Error("Input for image is not a url that goes to an image.");
   }
