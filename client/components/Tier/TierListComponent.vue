@@ -38,11 +38,6 @@ onBeforeMount(async () => {
 </script>
 
 <template>
-  <section v-if="isLoggedIn">
-    <h2>Create a tier:</h2>
-    <CreateTierForm @refreshTiers="getTiers" />
-  </section>
-  <h2>Tiers:</h2>
   <section class="tiers" v-if="loaded && tiers.length !== 0">
     <article v-for="tier in tiers" :key="tier._id">
       <TierComponent v-if="editing !== tier._id && adding != tier._id" :tier="tier" @refreshTiers="getTiers" @editTier="updateEditing" @addItem="updateAdding" />
@@ -50,8 +45,13 @@ onBeforeMount(async () => {
       <AddItemForm v-else :tier="tier" @refreshTiers="getTiers" @editTier="updateEditing" @addItem="updateAdding" />
     </article>
   </section>
-  <p v-else-if="loaded">No tiers found.</p>
+  <p v-else-if="loaded">You have yet to create a tier.</p>
   <p v-else>Loading...</p>
+  -
+  <section v-if="isLoggedIn">
+    <h2>create a tier:</h2>
+    <CreateTierForm @refreshTiers="getTiers" />
+  </section>
 </template>
 
 <style scoped>
@@ -59,6 +59,7 @@ section {
   display: flex;
   flex-direction: column;
   gap: 1em;
+  text-align: center;
 }
 
 section,
@@ -68,6 +69,10 @@ p,
   max-width: 60em;
 }
 
+h2 {
+  margin-top: 0em;
+}
+
 article {
   background-color: var(--base-bg);
   border-radius: 1em;
@@ -75,6 +80,8 @@ article {
   flex-direction: column;
   gap: 0.5em;
   padding: 1em;
+  border: 1px solid #b5b7b9;
+  margin-top: 1em;
 }
 
 .posts {

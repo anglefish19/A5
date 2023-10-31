@@ -4,7 +4,16 @@ import TierListComponent from "@/components/Tier/TierListComponent.vue";
 
 <template>
   <main class="column">
-    <h1>Tiers</h1>
+    <h1>tiers</h1>
     <TierListComponent />
   </main>
 </template>
+
+<style scoped>
+h1 {
+  font-size: 2em;
+  font-weight: 600;
+  margin-top: 1.5em;
+  margin-bottom: 0;
+}
+</style>

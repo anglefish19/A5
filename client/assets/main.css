@@ -16,11 +16,16 @@ button.button-error {
 
 a.button {
   color: #212529;
-  background-color: #f1f3f5;
-  border: 1px solid #dee2e6;
+  background-color: rgb(255, 208, 150);
+  border: 1px solid #b5b7b9;
   border-radius: 0.25em;
-  padding: 0.375em 0.75em;
+  padding: 0.5em 1em;
   text-decoration: none;
+  font-size: 1.25em;
+}
+
+a.button:hover {
+  background-color: rgb(255, 237, 150);
 }
 
 .column {

@@ -21,20 +21,40 @@ async function updatePassword() {
 </script>
 
 <template>
-  <h2>Update user details</h2>
+  -
+  <h2>update user details</h2>
   <form @submit.prevent="updateUsername" class="pure-form">
     <fieldset>
-      <legend>Change your username</legend>
-      <input type="text" placeholder="New username" v-model="username" required />
-      <button type="submit" class="pure-button pure-button-primary">Update username</button>
+      <legend>change your username</legend>
+      <input type="text" placeholder="new username" v-model="username" required />
+      <button type="submit" class="submit">update</button>
     </fieldset>
   </form>
 
   <form @submit.prevent="updatePassword" class="pure-form">
     <fieldset>
-      <legend>Change your password</legend>
-      <input type="password" placeholder="New password" v-model="password" required />
-      <button type="submit" class="pure-button pure-button-primary">Update password</button>
+      <legend>change your password</legend>
+      <input type="password" placeholder="new password" v-model="password" required />
+      <button type="submit" class="submit">update</button>
     </fieldset>
   </form>
 </template>
+
+<style scoped>
+h2 {
+  margin-top: 0.25em;
+}
+.submit {
+  background-color: rgb(255, 208, 150);
+  border: 1px solid #b5b7b9;
+  margin-top: 1em;
+  padding: 0.5em 1em;
+  text-decoration: none;
+  font-size: 1em;
+}
+
+.submit:hover {
+  cursor: pointer;
+  background-color: rgb(255, 237, 150);
+}
+</style>

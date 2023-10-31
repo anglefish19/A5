@@ -73,11 +73,13 @@ class Routes {
 
   // POST
   @Router.get("/posts")
-  async getPosts(author?: string) {
+  async getPosts(author?: string, _id?: ObjectId) {
     let posts;
     if (author) {
       const id = (await User.getUserByUsername(author))._id;
       posts = await Post.getByAuthor(id);
+    } else if (_id) {
+      posts = await Post.getPosts({ _id: _id });
     } else {
       posts = await Post.getPosts({});
     }
@@ -189,32 +191,33 @@ class Routes {
   @Router.post("/feed")
   async createFeed(session: WebSessionDoc) {
     const user = WebSession.getUser(session);
-    const lastAuth = await User.getLastAuth(user);
-    const feeds = await Feed.getByUser(user);
-    if (feeds.length === 0 || feeds[0].displayFrom.getTime() < lastAuth.getTime()) {
-      const time = new Date();
-      if (feeds.length === 0) {
-        time.setDate(time.getDate() - 1);
-      } else {
-        time.setDate(feeds[0].displayFrom.getDate());
-      }
-      const tiers = await Tier.getByOwner(user);
-      const friends = await Friend.getFriends(user);
-      const posts: ObjectId[] = [];
 
-      for (const tier of tiers) {
-        for (const friend of friends) {
-          if (await Tier.isItemInTier(tier._id, (await User.getUserById(friend)).username)) {
-            const friendPosts = await Post.getPosts({ author: friend, dateCreated: { $gt: time } });
-            for (const post of friendPosts) {
-              posts.push(post._id);
-            }
+    const time = new Date();
+    time.setDate(time.getDate() - 1);
+    const tiers = await Tier.getByOwner(user);
+    if (tiers.length === 0) {
+      return;
+    }
+    const posts = [];
+    const friends: string[] = [];
+
+    for (const tier of tiers) {
+      for (const friend of tier.items) {
+        if (!friends.includes(friend)) {
+          const friendID = (await User.getUserByUsername(friend))._id;
+          const friendPosts = await Post.getPosts({ author: friendID, dateCreated: { $gt: time } });
+          for (const post of friendPosts) {
+            posts.push(post);
           }
+          friends.push(friend);
         }
       }
-      return await Feed.create(user, time, posts);
     }
-    return feeds[0];
+    if (posts.length === 0) {
+      return;
+    }
+    const postsWithUsernames = await Responses.posts(posts);
+    return await Feed.create(user, new Date(), postsWithUsernames);
   }
 
   // FOLLOW

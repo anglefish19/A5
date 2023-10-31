@@ -5,8 +5,12 @@ import { useUserStore } from "@/stores/user";
 import HomeView from "../views/HomeView.vue";
 import LoginView from "../views/LoginView.vue";
 import NotFoundView from "../views/NotFoundView.vue";
+import RegisterView from "../views/RegisterView.vue";
 import SettingView from "../views/SettingView.vue";
 import TierView from "../views/TierView.vue";
+import UserView from "../views/UserView.vue";
+import FriendsView from "../views/FriendsView.vue";
+import CreatePostView from "../views/CreatePostView.vue";
 
 const router = createRouter({
   history: createWebHistory(),
@@ -15,6 +19,24 @@ const router = createRouter({
       path: "/",
       name: "Home",
       component: HomeView,
+    },
+    {
+      path: "/create",
+      name: "Create",
+      component: CreatePostView,
+      meta: { requiresAuth: true },
+    },
+    {
+      path: "/user",
+      name: "User",
+      component: UserView,
+      meta: { requiresAuth: true },
+    },
+    {
+      path: "/friends",
+      name: "Friends",
+      component: FriendsView,
+      meta: { requiresAuth: true },
     },
     {
       path: "/setting",
@@ -26,6 +48,18 @@ const router = createRouter({
       path: "/login",
       name: "Login",
       component: LoginView,
+      meta: { requiresAuth: false },
+      beforeEnter: (to, from) => {
+        const { isLoggedIn } = storeToRefs(useUserStore());
+        if (isLoggedIn.value) {
+          return { name: "Settings" };
+        }
+      },
+    },
+    {
+      path: "/register",
+      name: "Register",
+      component: RegisterView,
       meta: { requiresAuth: false },
       beforeEnter: (to, from) => {
         const { isLoggedIn } = storeToRefs(useUserStore());

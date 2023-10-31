@@ -7,11 +7,6 @@ import UpdateUserForm from "../components/Setting/UpdateUserForm.vue";
 const { currentUsername } = storeToRefs(useUserStore());
 const { logoutUser, deleteUser } = useUserStore();
 
-async function logout() {
-  await logoutUser();
-  void router.push({ name: "Home" });
-}
-
 async function delete_() {
   await deleteUser();
   void router.push({ name: "Home" });
@@ -20,9 +15,17 @@ async function delete_() {
 
 <template>
   <main class="column">
-    <h1>Settings for {{ currentUsername }}</h1>
-    <button class="pure-button pure-button-primary" @click="logout">Logout</button>
-    <button class="button-error pure-button" @click="delete_">Delete User</button>
+    <h1>settings for {{ currentUsername }}</h1>
     <UpdateUserForm />
+    -
+    <button class="button-error pure-button" @click="delete_">Delete User</button>
   </main>
 </template>
+
+<style scoped>
+h1,
+button {
+  margin-top: 1em;
+  margin-bottom: 0.25em;
+}
+</style>

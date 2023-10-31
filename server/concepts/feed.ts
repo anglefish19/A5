@@ -4,13 +4,13 @@ import DocCollection, { BaseDoc } from "../framework/doc";
 export interface FeedDoc extends BaseDoc {
   user: ObjectId;
   displayFrom: Date;
-  content: ObjectId[];
+  content: Object[];
 }
 
 export default class FeedConcept {
   public readonly feeds = new DocCollection<FeedDoc>("feeds");
 
-  async create(user: ObjectId, displayFrom: Date, content: ObjectId[]) {
+  async create(user: ObjectId, displayFrom: Date, content: Object[]) {
     const _id = await this.feeds.createOne({ user, displayFrom, content });
     return { msg: "Feed successfully created!", feed: await this.feeds.readOne({ _id }) };
   }

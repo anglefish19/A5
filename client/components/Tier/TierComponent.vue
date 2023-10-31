@@ -24,13 +24,18 @@ const deleteItem = async (item: string) => {
 </script>
 
 <template>
-  <p class="name">{{ props.tier.name }} - priority {{ props.tier.priority }}</p>
+  <p class="name">{{ props.tier.name }}</p>
+  <p class="priority">priority {{ props.tier.priority }}</p>
   <section class="items">
     <article v-for="item in props.tier.items" :key="item._id">
-      {{ item }}
-      <button class="button-error btn-small pure-button" @click="deleteItem(item)">Delete Item</button>
+      -
+      <div class="row">
+        {{ item }}
+        <button class="button-error btn-small pure-button" @click="deleteItem(item)">Remove</button>
+      </div>
     </article>
   </section>
+  -
   <div class="base">
     <menu>
       <li><button class="btn-small pure-button" @click="emit('addItem', props.tier._id)">Add User</button></li>
@@ -45,7 +50,19 @@ p {
   margin: 0em;
 }
 
-.author {
+article {
+  margin: 0.75em 0;
+  flex-direction: row;
+}
+
+.row {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  margin: 0.75em 0;
+}
+.name {
   font-weight: bold;
   font-size: 1.2em;
 }
@@ -67,6 +84,7 @@ menu {
 }
 
 .base {
+  margin-top: 1em;
   display: flex;
   justify-content: space-between;
   align-items: center;
